@@ -271,10 +271,18 @@ std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 	return keyWord;
 }
 
-void updateInputData(std::vector<InputData>& input) {
-	std::ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
+void updateInputData(std::vector<InputData>& input, const std::string& fileName) {
+	std::ifstream fin{ fileName };
+
+	if (!fin.is_open()) {
+		std::cerr << "파일을 열 수 없습니다." << std::endl;
+		return; // 오류 발생 시 프로그램 종료
+	}
+
 	input.clear();
-	for (int dataIndex = 0; dataIndex < 500; dataIndex++) {
+
+	std::string line;
+	while (std::getline(fin, line)) {
 		std::string keyWord, dayOfTheWeek;
 		fin >> keyWord >> dayOfTheWeek;
 		input.push_back({ keyWord , dayOfTheWeek });
@@ -291,7 +299,7 @@ void printOutput(const std::vector<InputData>& input)
 
 int main() {
 	std::vector<InputData> data = {};
-	updateInputData(data);
+	updateInputData(data, "keyword_weekday_500.txt");
 	printOutput(data);
 	return 0;
 }
