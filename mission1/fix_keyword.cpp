@@ -43,8 +43,8 @@ enum TYPE_OF_DAY
 	inValidType = 0xFF
 };
 
-vector<Node2> weekBest[maxWeekDay]; //월 ~ 금
-vector<Node2> twoBest[maxDayType]; //평일, 주말
+vector<Node2> weekDayBest[maxWeekDay]; //월 ~ 금
+vector<Node2> weekTypeBest[maxDayType]; //평일, 주말
 
 int UZ = 9;
 
@@ -124,7 +124,7 @@ string input2(string w, string dayString) {
 	long long int max2 = 0;
 
 	int flag = 0;
-	for (Node2& node : weekBest[dayOfWeek]) {
+	for (Node2& node : weekDayBest[dayOfWeek]) {
 		if (node.name == w) {
 			max1 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
@@ -133,7 +133,7 @@ string input2(string w, string dayString) {
 		}
 	}
 
-	for (Node2& node : twoBest[dayType]) {
+	for (Node2& node : weekTypeBest[dayType]) {
 		if (node.name == w) {
 			max2 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
@@ -144,16 +144,16 @@ string input2(string w, string dayString) {
 	//재정렬 작업
 	if (UZ >= 2100000000 || max1 >= 2100000000 || max2 >= 2100000000) {
 		UZ = 9;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < maxWeekDay; i++) {
 			int num = 1;
-			for (Node2& node : weekBest[i]) {
+			for (Node2& node : weekDayBest[i]) {
 				node.point = num;
 				num++;
 			}
 		}
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < maxDayType; i++) {
 			int num = 1;
-			for (Node2& node : twoBest[i]) {
+			for (Node2& node : weekTypeBest[i]) {
 				node.point = num;
 				num++;
 			}
@@ -166,42 +166,42 @@ string input2(string w, string dayString) {
 
 
 	//찰떡 HIT
-	for (Node2& node : weekBest[dayOfWeek]) {
+	for (Node2& node : weekDayBest[dayOfWeek]) {
 		if (similar(node.name, w)) {
 			return node.name;
 		}
 	}
 
-	for (Node2& node : twoBest[dayOfWeek]) {
+	for (Node2& node : weekTypeBest[dayOfWeek]) {
 		if (similar(node.name, w)) {
 			return node.name;
 		}
 	}
 
 	//완벽 HIT / 찰떡 HIT 둘다 아닌경우
-	if (weekBest[dayOfWeek].size() < 10) {
-		weekBest[dayOfWeek].push_back({ w, point });
-		std::sort(weekBest[dayOfWeek].begin(), weekBest[dayOfWeek].end());
+	if (weekDayBest[dayOfWeek].size() < 10) {
+		weekDayBest[dayOfWeek].push_back({ w, point });
+		std::sort(weekDayBest[dayOfWeek].begin(), weekDayBest[dayOfWeek].end());
 	}
 
-	if (twoBest[dayOfWeek].size() < 10) {
-		twoBest[dayOfWeek].push_back({ w, point });
-		std::sort(twoBest[dayOfWeek].begin(), twoBest[dayOfWeek].end());
+	if (weekTypeBest[dayOfWeek].size() < 10) {
+		weekTypeBest[dayOfWeek].push_back({ w, point });
+		std::sort(weekTypeBest[dayOfWeek].begin(), weekTypeBest[dayOfWeek].end());
 	}
 
-	if (weekBest[dayOfWeek].size() == 10) {
-		if (weekBest[dayOfWeek].back().point < point) {
-			weekBest[dayOfWeek].pop_back();
-			weekBest[dayOfWeek].push_back({ w, point });
-			std::sort(weekBest[dayOfWeek].begin(), weekBest[dayOfWeek].end());
+	if (weekDayBest[dayOfWeek].size() == 10) {
+		if (weekDayBest[dayOfWeek].back().point < point) {
+			weekDayBest[dayOfWeek].pop_back();
+			weekDayBest[dayOfWeek].push_back({ w, point });
+			std::sort(weekDayBest[dayOfWeek].begin(), weekDayBest[dayOfWeek].end());
 		}
 	}
 
-	if (twoBest[dayOfWeek].size() == 10) {
-		if (twoBest[dayOfWeek].back().point < point) {
-			twoBest[dayOfWeek].pop_back();
-			twoBest[dayOfWeek].push_back({ w, point });
-			std::sort(twoBest[dayOfWeek].begin(), twoBest[dayOfWeek].end());
+	if (weekTypeBest[dayOfWeek].size() == 10) {
+		if (weekTypeBest[dayOfWeek].back().point < point) {
+			weekTypeBest[dayOfWeek].pop_back();
+			weekTypeBest[dayOfWeek].push_back({ w, point });
+			std::sort(weekTypeBest[dayOfWeek].begin(), weekTypeBest[dayOfWeek].end());
 		}
 	}
 
