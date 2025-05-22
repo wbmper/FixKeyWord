@@ -22,8 +22,28 @@ struct Node2 {
 	}
 };
 
-vector<Node2> weekBest[7]; //월 ~ 금
-vector<Node2> twoBest[2]; //평일, 주말
+enum DAY_OF_WEEK
+{
+	monDay = 0,
+	tuesDay,
+	wednesDay,
+	thursDay,
+	friDay,
+	saturDay,
+	sunDay,
+	maxWeekDay,
+};
+
+enum TYPE_OF_DAY
+{
+	weekDays = 0,
+	weekEnd,
+	maxDayType,
+};
+
+vector<Node2> weekBest[maxWeekDay]; //월 ~ 금
+vector<Node2> twoBest[maxDayType]; //평일, 주말
+
 int UZ = 9;
 
 // 레벤슈타인 거리 계산 알고리즘 (문자열 유사도 검사)
