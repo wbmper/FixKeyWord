@@ -204,9 +204,9 @@ string input2(string w, string dayString) {
 void input() {
 	ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
 	for (int i = 0; i < 500; i++) {
-		string t1, t2;
-		fin >> t1 >> t2;
-		string ret = input2(t1, t2);
+		string keyWord, dayOfTheWeek;
+		fin >> keyWord >> dayOfTheWeek;
+		string ret = input2(keyWord, dayOfTheWeek);
 		std::cout << ret << "\n";
 	}
 }
