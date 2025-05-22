@@ -25,6 +25,7 @@ enum TYPE_OF_DAY
 	maxDayType,
 	inValidType = 0xFF
 };
+
 inline int levenshtein(const std::string& a, const std::string& b) {
 	const size_t len_a = a.size();
 	const size_t len_b = b.size();
@@ -100,7 +101,6 @@ public:
 		return false;
 	}
 };
-
 
 class IKeywordManager
 {
@@ -322,15 +322,6 @@ public:
 		GetNPrintOutput();
 		closeData();
 	}
-	void GetNPrintOutput() {
-		DayBestManager dbManager;
-		TypeBestManager tbManager;
-		Processor processor{ &dbManager, &tbManager };
-		for (const auto& element : input)
-		{
-			std::cout << processor.getRecommededKeyword(element.keyWord, element.weekDay) << "\n";
-		}
-	}
 private:
 	std::vector<InputData> input = {};
 	std::ifstream fin = {};
@@ -349,5 +340,14 @@ private:
 	void closeData()
 	{
 		fin.close();
+	}
+	void GetNPrintOutput() {
+		DayBestManager dbManager;
+		TypeBestManager tbManager;
+		Processor processor{ &dbManager, &tbManager };
+		for (const auto& element : input)
+		{
+			std::cout << processor.getRecommededKeyword(element.keyWord, element.weekDay) << "\n";
+		}
 	}
 };
