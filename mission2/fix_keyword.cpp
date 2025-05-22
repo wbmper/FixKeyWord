@@ -18,7 +18,6 @@ enum DAY_OF_WEEK
 	maxWeekDay,
 	inValidDay = 0xFF
 };
-
 enum TYPE_OF_DAY
 {
 	weekDays = 0,
@@ -26,11 +25,31 @@ enum TYPE_OF_DAY
 	maxDayType,
 	inValidType = 0xFF
 };
+inline int levenshtein(const std::string& a, const std::string& b) {
+	const size_t len_a = a.size();
+	const size_t len_b = b.size();
+
+	std::vector<std::vector<int>> d(len_a + 1, std::vector<int>(len_b + 1));
+
+	for (size_t i = 0; i <= len_a; ++i) d[i][0] = i;
+	for (size_t j = 0; j <= len_b; ++j) d[0][j] = j;
+
+	for (size_t i = 1; i <= len_a; ++i) {
+		for (size_t j = 1; j <= len_b; ++j) {
+			if (a[i - 1] == b[j - 1])
+				d[i][j] = d[i - 1][j - 1];
+			else
+				d[i][j] = 1 + std::min({ d[i - 1][j], d[i][j - 1], d[i - 1][j - 1] });
+		}
+	}
+	return d[len_a][len_b];
+}
 
 struct InputData {
 	std::string keyWord;
 	std::string weekDay;
 };
+
 struct keyWordManageData {
 	std::string name;
 	int point;
@@ -64,26 +83,6 @@ private:
 	int UZ;
 };
 
-inline int levenshtein(const std::string& a, const std::string& b) {
-	const size_t len_a = a.size();
-	const size_t len_b = b.size();
-
-	std::vector<std::vector<int>> d(len_a + 1, std::vector<int>(len_b + 1));
-
-	for (size_t i = 0; i <= len_a; ++i) d[i][0] = i;
-	for (size_t j = 0; j <= len_b; ++j) d[0][j] = j;
-
-	for (size_t i = 1; i <= len_a; ++i) {
-		for (size_t j = 1; j <= len_b; ++j) {
-			if (a[i - 1] == b[j - 1])
-				d[i][j] = d[i - 1][j - 1];
-			else
-				d[i][j] = 1 + std::min({ d[i - 1][j], d[i][j - 1], d[i - 1][j - 1] });
-		}
-	}
-	return d[len_a][len_b];
-}
-
 class SimilarityCalculator
 {
 public:
@@ -100,49 +99,8 @@ public:
 		if (score >= 80) return true;
 		return false;
 	}
-
 };
 
-class InputOutputManager
-{
-public:
-	bool openData(const std::string& fileName) {
-		fin.open(fileName);
-
-		if (fin.fail()) {
-			std::cerr << "파일을 열 수 없습니다." << std::endl;
-			return false;
-		}
-
-		return true;
-	}
-	void execute() {
-		updateInputData();
-		printOutput();
-		closeData();
-	}
-private:
-	std::vector<InputData> input = {};
-	std::ifstream fin = {};
-	void updateInputData() {
-		std::string line;
-		while (true) {
-			std::string keyWord, dayOfTheWeek;
-			fin >> keyWord >> dayOfTheWeek;
-			input.push_back({ keyWord , dayOfTheWeek });
-			if (!std::getline(fin, line))
-			{
-				break;
-			}
-		}
-	}
-	void printOutput() {
-	}
-	void closeData()
-	{
-		fin.close();
-	}
-};
 
 class IKeywordManager
 {
@@ -157,6 +115,7 @@ private:
 
 class DayBestManager : public IKeywordManager
 {
+public:
 	void initializePoint() override
 	{
 		for (int day = 0; day < maxWeekDay; day++) {
@@ -212,6 +171,7 @@ private:
 
 class TypeBestManager : public IKeywordManager
 {
+public:
 	void initializePoint() override
 	{
 		for (int day = 0; day < maxDayType; day++) {
@@ -225,7 +185,7 @@ class TypeBestManager : public IKeywordManager
 	void registerData(int index, const std::string& keyWord) override
 	{
 		if (weekTypeBest[index].size() < 10) {
-			weekTypeBest[index].push_back({ keyWord, UZManager::GetInstance().getUZ()});
+			weekTypeBest[index].push_back({ keyWord, UZManager::GetInstance().getUZ() });
 			std::sort(weekTypeBest[index].begin(), weekTypeBest[index].end());
 		}
 
@@ -263,4 +223,131 @@ class TypeBestManager : public IKeywordManager
 private:
 	std::vector<keyWordManageData> weekTypeBest[maxDayType];
 	SimilarityCalculator cal;
+};
+
+class Processor
+{
+public:
+	Processor(DayBestManager* dataBest, TypeBestManager* typeBest)
+		: dataBestManager(dataBest), typeBestManager(typeBest)
+	{
+	}
+
+	std::string getRecommededKeyword(std::string keyWord, std::string dayString)
+	{
+		UZManager::GetInstance().update();
+		int dayOfWeek = getDayOfWeek(dayString);
+		int dayType = getDayType(dayOfWeek);
+		int point = UZManager::GetInstance().getUZ();
+
+		int max1 = 0;
+		int max2 = 0;
+
+		int perfectFlag = 0;
+		keyWordManageData target;
+		if (dataBestManager->getPerfectKeyword(dayOfWeek, keyWord, target))
+		{
+			max1 = target.point;
+			perfectFlag = 1;
+		}
+
+		if (typeBestManager->getPerfectKeyword(dayType, keyWord, target))
+		{
+			max2 = target.point;
+			perfectFlag = 1;
+		}
+
+		//찰떡 HIT, 유사하다면
+		std::string name = dataBestManager->getSimilarKeyword(dayOfWeek, keyWord);
+		if (!name.empty())
+		{
+			return name;
+		}
+
+		name = typeBestManager->getSimilarKeyword(dayType, keyWord);
+		if (!name.empty())
+		{
+			return name;
+		}
+
+		//완벽 HIT / 찰떡 HIT 둘다 아닌경우
+		dataBestManager->registerData(dayOfWeek, keyWord);
+		typeBestManager->registerData(dayType, keyWord);
+
+		return keyWord;
+	}
+
+	int getDayType(int day)
+	{
+		if (day < monDay || day >= maxWeekDay)
+			return inValidType;
+
+		if (day >= monDay && day <= friDay)
+			return weekDays;
+
+		return weekEnd;
+	}
+	int getDayOfWeek(const std::string& dayString)
+	{
+		const std::string dayOfWeek[maxWeekDay] = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
+
+		for (int day = monDay; day < maxWeekDay; day++)
+		{
+			if (dayOfWeek[day] == dayString)
+				return day;
+		}
+
+		return inValidDay;
+	}
+private:
+	DayBestManager* dataBestManager;
+	TypeBestManager* typeBestManager;
+};
+
+class InputOutputManager
+{
+public:
+	bool openData(const std::string& fileName) {
+		fin.open(fileName);
+
+		if (fin.fail()) {
+			std::cerr << "파일을 열 수 없습니다." << std::endl;
+			return false;
+		}
+
+		return true;
+	}
+	void execute() {
+		updateInputData();
+		GetNPrintOutput();
+		closeData();
+	}
+	void GetNPrintOutput() {
+		DayBestManager dbManager;
+		TypeBestManager tbManager;
+		Processor processor{ &dbManager, &tbManager };
+		for (const auto& element : input)
+		{
+			std::cout << processor.getRecommededKeyword(element.keyWord, element.weekDay) << "\n";
+		}
+	}
+private:
+	std::vector<InputData> input = {};
+	std::ifstream fin = {};
+	void updateInputData() {
+		std::string line;
+		while (true) {
+			std::string keyWord, dayOfTheWeek;
+			fin >> keyWord >> dayOfTheWeek;
+			input.push_back({ keyWord , dayOfTheWeek });
+			if (!std::getline(fin, line))
+			{
+				break;
+			}
+		}
+	}
+	void closeData()
+	{
+		fin.close();
+	}
 };
