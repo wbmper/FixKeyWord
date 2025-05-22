@@ -146,17 +146,17 @@ void registerWeekDayBest(int day, const std::string& keyWord)
 	}
 }
 
-void registerWeekTypeBest(int day, std::string& keyWord)
+void registerWeekTypeBest(int dayType, std::string& keyWord)
 {
-	if (weekTypeBest[day].size() < 10) {
-		weekTypeBest[day].push_back({ keyWord, UZ });
-		std::sort(weekTypeBest[day].begin(), weekTypeBest[day].end());
+	if (weekTypeBest[dayType].size() < 10) {
+		weekTypeBest[dayType].push_back({ keyWord, UZ });
+		std::sort(weekTypeBest[dayType].begin(), weekTypeBest[dayType].end());
 	}
 
-	if (weekTypeBest[day].back().point < UZ) {
-		weekTypeBest[day].pop_back();
-		weekTypeBest[day].push_back({ keyWord, UZ });
-		std::sort(weekTypeBest[day].begin(), weekTypeBest[day].end());
+	if (weekTypeBest[dayType].back().point < UZ) {
+		weekTypeBest[dayType].pop_back();
+		weekTypeBest[dayType].push_back({ keyWord, UZ });
+		std::sort(weekTypeBest[dayType].begin(), weekTypeBest[dayType].end());
 	}
 }
 
@@ -208,7 +208,7 @@ string input2(string keyWord, string dayString) {
 		}
 	}
 
-	for (Node2& node : weekTypeBest[dayOfWeek]) {
+	for (Node2& node : weekTypeBest[dayType]) {
 		if (similar(node.name, keyWord)) {
 			return node.name;
 		}
@@ -216,7 +216,7 @@ string input2(string keyWord, string dayString) {
 
 	//¿Ïº® HIT / Âû¶± HIT µÑ´Ù ¾Æ´Ñ°æ¿ì
 	registerWeekDayBest(dayOfWeek, keyWord);
-	registerWeekTypeBest(dayOfWeek, keyWord);
+	registerWeekTypeBest(dayType, keyWord);
 
 	return keyWord;
 }
