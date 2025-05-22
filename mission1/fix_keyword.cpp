@@ -202,6 +202,7 @@ std::string input2(std::string keyWord, std::string dayString) {
 	if (getPerfectKeywordFromDayType(dayType, keyWord, target))
 	{
 		max2 = target.point;
+		perfectFlag = 1;
 	}
 
 	//재정렬 작업
