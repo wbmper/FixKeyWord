@@ -185,6 +185,7 @@ string input2(string keyWord, string dayString) {
 		if (node.name == keyWord) {
 			max2 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
+			perfectFlag = 1;
 			break;
 		}
 	}
