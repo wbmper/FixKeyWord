@@ -98,25 +98,24 @@ int getDayType(int day)
 	return weekEnd;
 }
 
-int getDayOfWeek(const std::string& wk)
+int getDayOfWeek(const std::string& dayString)
 {
 	const string dayOfWeek[maxWeekDay] = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
 
 	for (int day = monDay; day < maxWeekDay; day++)
 	{
-		if (dayOfWeek[day] == wk)
+		if (dayOfWeek[day] == dayString)
 			return day;
 	}
 
 	return inValidDay;
 }
 
-string input2(string w, string dayString) {
+string input2(string keyWord, string dayString) {
 	UZ++;
 
 	int dayOfWeek = getDayOfWeek(dayString);
 	int dayType = getDayType(dayOfWeek);
-
 	int point = UZ;
 
 	//관리 목록에 존재하는지 확인
@@ -125,18 +124,18 @@ string input2(string w, string dayString) {
 	long long int max1 = 0;
 	long long int max2 = 0;
 
-	int flag = 0;
+	int perfectFlag = 0;
 	for (Node2& node : weekDayBest[dayOfWeek]) {
-		if (node.name == w) {
+		if (node.name == keyWord) {
 			max1 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
-			flag = 1;
+			perfectFlag = 1;
 			break;
 		}
 	}
 
 	for (Node2& node : weekTypeBest[dayType]) {
-		if (node.name == w) {
+		if (node.name == keyWord) {
 			max2 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
 			break;
@@ -153,48 +152,48 @@ string input2(string w, string dayString) {
 				num++;
 			}
 		}
-		for (int i = 0; i < maxDayType; i++) {
+		for (int dayType = 0; dayType < maxDayType; dayType++) {
 			int num = 1;
-			for (Node2& node : weekTypeBest[i]) {
+			for (Node2& node : weekTypeBest[dayType]) {
 				node.point = num;
 				num++;
 			}
 		}
 	}
 
-	if (flag == 1) {
-		return w;
+	if (perfectFlag == 1) {
+		return keyWord;
 	}
 
 
 	//찰떡 HIT
 	for (Node2& node : weekDayBest[dayOfWeek]) {
-		if (similar(node.name, w)) {
+		if (similar(node.name, keyWord)) {
 			return node.name;
 		}
 	}
 
 	for (Node2& node : weekTypeBest[dayOfWeek]) {
-		if (similar(node.name, w)) {
+		if (similar(node.name, keyWord)) {
 			return node.name;
 		}
 	}
 
 	//완벽 HIT / 찰떡 HIT 둘다 아닌경우
 	if (weekDayBest[dayOfWeek].size() < 10) {
-		weekDayBest[dayOfWeek].push_back({ w, point });
+		weekDayBest[dayOfWeek].push_back({ keyWord, point });
 		std::sort(weekDayBest[dayOfWeek].begin(), weekDayBest[dayOfWeek].end());
 	}
 
 	if (weekTypeBest[dayOfWeek].size() < 10) {
-		weekTypeBest[dayOfWeek].push_back({ w, point });
+		weekTypeBest[dayOfWeek].push_back({ keyWord, point });
 		std::sort(weekTypeBest[dayOfWeek].begin(), weekTypeBest[dayOfWeek].end());
 	}
 
 	if (weekDayBest[dayOfWeek].size() == 10) {
 		if (weekDayBest[dayOfWeek].back().point < point) {
 			weekDayBest[dayOfWeek].pop_back();
-			weekDayBest[dayOfWeek].push_back({ w, point });
+			weekDayBest[dayOfWeek].push_back({ keyWord, point });
 			std::sort(weekDayBest[dayOfWeek].begin(), weekDayBest[dayOfWeek].end());
 		}
 	}
@@ -202,12 +201,12 @@ string input2(string w, string dayString) {
 	if (weekTypeBest[dayOfWeek].size() == 10) {
 		if (weekTypeBest[dayOfWeek].back().point < point) {
 			weekTypeBest[dayOfWeek].pop_back();
-			weekTypeBest[dayOfWeek].push_back({ w, point });
+			weekTypeBest[dayOfWeek].push_back({ keyWord, point });
 			std::sort(weekTypeBest[dayOfWeek].begin(), weekTypeBest[dayOfWeek].end());
 		}
 	}
 
-	return w;
+	return keyWord;
 }
 
 void input() {
