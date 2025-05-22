@@ -13,11 +13,11 @@ struct InputData {
 	std::string weekDay;
 };
 
-struct Node2 {
+struct keyWordManagData {
 	std::string name;
 	int point;
 
-	bool operator<(const Node2& other) const {
+	bool operator<(const keyWordManagData& other) const {
 		return point < other.point;
 	}
 };
@@ -43,8 +43,8 @@ enum TYPE_OF_DAY
 	inValidType = 0xFF
 };
 
-std::vector<Node2> weekDayBest[maxWeekDay]; //岿 ~ 陛
-std::vector<Node2> weekTypeBest[maxDayType]; //乞老, 林富
+std::vector<keyWordManagData> weekDayBest[maxWeekDay]; //岿 ~ 陛
+std::vector<keyWordManagData> weekTypeBest[maxDayType]; //乞老, 林富
 
 int UZ = UZ_INITIAL - 1;
 
@@ -111,7 +111,7 @@ void initializeDayBestPoint()
 {
 	for (int day = 0; day < maxWeekDay; day++) {
 		int num = 1;
-		for (Node2& node : weekDayBest[day]) {
+		for (keyWordManagData& node : weekDayBest[day]) {
 			node.point = num;
 			num++;
 		}
@@ -122,7 +122,7 @@ void initializeTypeBestPoint()
 {
 	for (int dayType = 0; dayType < maxDayType; dayType++) {
 		int num = 1;
-		for (Node2& node : weekTypeBest[dayType]) {
+		for (keyWordManagData& node : weekTypeBest[dayType]) {
 			node.point = num;
 			num++;
 		}
@@ -157,9 +157,9 @@ void registerWeekTypeBest(int dayType, std::string& keyWord)
 	}
 }
 
-bool getPerfectKeywordFromDayBest(int dayOfWeek, const std::string& keyWord, Node2& target)
+bool getPerfectKeywordFromDayBest(int dayOfWeek, const std::string& keyWord, keyWordManagData& target)
 {
-	for (Node2& node : weekDayBest[dayOfWeek]) {
+	for (keyWordManagData& node : weekDayBest[dayOfWeek]) {
 		if (node.name == keyWord) {
 			node.point += (node.point * 0.1);
 			target = node;
@@ -170,9 +170,9 @@ bool getPerfectKeywordFromDayBest(int dayOfWeek, const std::string& keyWord, Nod
 	return false;
 }
 
-bool getPerfectKeywordFromDayType(int dayType, const std::string& keyWord, Node2& target)
+bool getPerfectKeywordFromDayType(int dayType, const std::string& keyWord, keyWordManagData& target)
 {
-	for (Node2& node : weekTypeBest[dayType]) {
+	for (keyWordManagData& node : weekTypeBest[dayType]) {
 		if (node.name == keyWord) {
 			node.point += (node.point * 0.1);
 			target = node;
@@ -187,7 +187,7 @@ const std::string& getSimilarKeywordFromDayBest(int dayOfWeek, std::string& keyW
 {
 	std::string name;
 	name.clear();
-	for (Node2& node : weekDayBest[dayOfWeek]) {
+	for (keyWordManagData& node : weekDayBest[dayOfWeek]) {
 		if (similar(node.name, keyWord)) {
 			name = node.name;
 			break;
@@ -201,7 +201,7 @@ const std::string& getSimilarKeywordFromTypeBest(int dayType, std::string& keyWo
 {
 	std::string name;
 	name.clear();
-	for (Node2& node : weekTypeBest[dayType]) {
+	for (keyWordManagData& node : weekTypeBest[dayType]) {
 		if (similar(node.name, keyWord)) {
 			name = node.name;
 			break;
@@ -225,7 +225,7 @@ std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 	int max2 = 0;
 
 	int perfectFlag = 0;
-	Node2 target;
+	keyWordManagData target;
 	if (getPerfectKeywordFromDayBest(dayOfWeek, keyWord, target))
 	{
 		max1 = target.point;

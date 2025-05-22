@@ -13,17 +13,17 @@ struct Node {
 	string wk;
 };
 
-struct Node2 {
+struct keyWordManagData {
 	string name;
 	int point;
 
-	bool operator<(const Node2& other) const {
+	bool operator<(const keyWordManagData& other) const {
 		return point < other.point;
 	}
 };
 
-vector<Node2> weekDayBest[7]; //월 ~ 금
-vector<Node2> weekTypeBest[2]; //평일, 주말
+vector<keyWordManagData> weekDayBest[7]; //월 ~ 금
+vector<keyWordManagData> weekTypeBest[2]; //평일, 주말
 int UZ = 9;
 
 // 레벤슈타인 거리 계산 알고리즘 (문자열 유사도 검사)
@@ -89,7 +89,7 @@ string input2(string w, string wk) {
 	long long int max2 = 0;
 
 	int flag = 0;
-	for (Node2& node : weekDayBest[index]) {
+	for (keyWordManagData& node : weekDayBest[index]) {
 		if (node.name == w) {
 			max1 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
@@ -98,7 +98,7 @@ string input2(string w, string wk) {
 		}
 	}
 
-	for (Node2& node : weekTypeBest[index2]) {
+	for (keyWordManagData& node : weekTypeBest[index2]) {
 		if (node.name == w) {
 			max2 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
@@ -111,14 +111,14 @@ string input2(string w, string wk) {
 		UZ = 9;
 		for (int i = 0; i < 5; i++) {
 			int num = 1;
-			for (Node2& node : weekDayBest[i]) {
+			for (keyWordManagData& node : weekDayBest[i]) {
 				node.point = num;
 				num++;
 			}
 		}
 		for (int i = 0; i < 2; i++) {
 			int num = 1;
-			for (Node2& node : weekTypeBest[i]) {
+			for (keyWordManagData& node : weekTypeBest[i]) {
 				node.point = num;
 				num++;
 			}
@@ -131,13 +131,13 @@ string input2(string w, string wk) {
 
 
 	//찰떡 HIT
-	for (Node2& node : weekDayBest[index]) {
+	for (keyWordManagData& node : weekDayBest[index]) {
 		if (similer(node.name, w)) {
 			return node.name;
 		}
 	}
 
-	for (Node2& node : weekTypeBest[index]) {
+	for (keyWordManagData& node : weekTypeBest[index]) {
 		if (similer(node.name, w)) {
 			return node.name;
 		}
