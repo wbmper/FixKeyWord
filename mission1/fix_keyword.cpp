@@ -9,6 +9,7 @@
 using namespace std;
 
 #define ARRAGNE_THRESHOLD (2100000000)
+#define UZ_INITIAL (10)
 
 struct Node {
 	string w;
@@ -48,7 +49,7 @@ enum TYPE_OF_DAY
 vector<Node2> weekDayBest[maxWeekDay]; //월 ~ 금
 vector<Node2> weekTypeBest[maxDayType]; //평일, 주말
 
-int UZ = 9;
+int UZ = UZ_INITIAL;
 
 // 레벤슈타인 거리 계산 알고리즘 (문자열 유사도 검사)
 int levenshtein(const std::string& a, const std::string& b) {
@@ -132,8 +133,6 @@ void initializeTypeBestPoint()
 }
 
 string input2(string keyWord, string dayString) {
-	UZ++;
-
 	int dayOfWeek = getDayOfWeek(dayString);
 	int dayType = getDayType(dayOfWeek);
 	int point = UZ;
@@ -164,7 +163,7 @@ string input2(string keyWord, string dayString) {
 
 	//재정렬 작업
 	if (UZ >= ARRAGNE_THRESHOLD || max1 >= ARRAGNE_THRESHOLD || max2 >= ARRAGNE_THRESHOLD) {
-		UZ = 9;
+		UZ = UZ_INITIAL;
 		initializeDayBestPoint();
 		initializeTypeBestPoint();
 	}
