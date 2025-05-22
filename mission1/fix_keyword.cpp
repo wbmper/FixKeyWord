@@ -109,6 +109,28 @@ int getDayOfWeek(const std::string& dayString)
 	return inValidDay;
 }
 
+void initializeDayBestPoint()
+{
+	for (int day = 0; day < maxWeekDay; day++) {
+		int num = 1;
+		for (Node2& node : weekDayBest[day]) {
+			node.point = num;
+			num++;
+		}
+	}
+}
+
+void initializeTypeBestPoint()
+{
+	for (int dayType = 0; dayType < maxDayType; dayType++) {
+		int num = 1;
+		for (Node2& node : weekTypeBest[dayType]) {
+			node.point = num;
+			num++;
+		}
+	}
+}
+
 string input2(string keyWord, string dayString) {
 	UZ++;
 
@@ -143,20 +165,8 @@ string input2(string keyWord, string dayString) {
 	//재정렬 작업
 	if (UZ >= ARRAGNE_THRESHOLD || max1 >= ARRAGNE_THRESHOLD || max2 >= ARRAGNE_THRESHOLD) {
 		UZ = 9;
-		for (int i = 0; i < maxWeekDay; i++) {
-			int num = 1;
-			for (Node2& node : weekDayBest[i]) {
-				node.point = num;
-				num++;
-			}
-		}
-		for (int dayType = 0; dayType < maxDayType; dayType++) {
-			int num = 1;
-			for (Node2& node : weekTypeBest[dayType]) {
-				node.point = num;
-				num++;
-			}
-		}
+		initializeDayBestPoint();
+		initializeTypeBestPoint();
 	}
 
 	if (perfectFlag == 1) {
