@@ -8,6 +8,11 @@
 #define ARRAGNE_THRESHOLD (2100000000)
 #define UZ_INITIAL (10)
 
+struct InputData {
+	std::string keyWord;
+	std::string weekDay;
+};
+
 struct Node2 {
 	std::string name;
 	int point;
@@ -205,7 +210,8 @@ const std::string& getSimilarKeywordFromTypeBest(int dayType, std::string& keyWo
 
 	return name;
 }
-std::string input2(std::string keyWord, std::string dayString) {
+
+std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 
 	UZ++;
 	int dayOfWeek = getDayOfWeek(dayString);
@@ -265,16 +271,27 @@ std::string input2(std::string keyWord, std::string dayString) {
 	return keyWord;
 }
 
-void input() {
+void updateInputData(std::vector<InputData>& input) {
 	std::ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
-	for (int i = 0; i < 500; i++) {
+	input.clear();
+	for (int dataIndex = 0; dataIndex < 500; dataIndex++) {
 		std::string keyWord, dayOfTheWeek;
 		fin >> keyWord >> dayOfTheWeek;
-		std::string ret = input2(keyWord, dayOfTheWeek);
-		std::cout << ret << "\n";
+		input.push_back({ keyWord , dayOfTheWeek });
+	}
+}
+
+void printOutput(const std::vector<InputData>& input)
+{
+	for (const auto& element : input)
+	{
+		std::cout << getRecommededKeyword(element.keyWord, element.weekDay) << "\n";
 	}
 }
 
 int main() {
-	input();
+	std::vector<InputData> data = {};
+	updateInputData(data);
+	printOutput(data);
+	return 0;
 }
