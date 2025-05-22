@@ -73,8 +73,7 @@ int levenshtein(const std::string& a, const std::string& b) {
 
 // 점수 환산
 bool similar(const std::string& a, const std::string& b) {
-	if (a.empty() && b.empty()) return 100;
-	if (a.empty() || b.empty()) return 1;
+	if (a.empty() || b.empty()) return true;
 
 	int dist = levenshtein(a, b);
 	int max_len = std::max(a.length(), b.length());
