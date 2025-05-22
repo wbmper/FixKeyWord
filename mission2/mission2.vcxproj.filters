@@ -32,5 +32,8 @@
     <Text Include="keyword_weekday_500.txt">
       <Filter>리소스 파일</Filter>
     </Text>
+    <Text Include="expected_output.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
   </ItemGroup>
 </Project>

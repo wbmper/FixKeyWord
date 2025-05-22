@@ -249,7 +249,6 @@ std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 		return keyWord;
 	}
 
-
 	//Âû¶± HIT, À¯»çÇÏ´Ù¸é
 	std::string name = getSimilarKeywordFromDayBest(dayOfWeek, keyWord);
 	if (!name.empty())
@@ -282,10 +281,14 @@ void updateInputData(std::vector<InputData>& input, const std::string& fileName)
 	input.clear();
 
 	std::string line;
-	while (std::getline(fin, line)) {
+	while (true) {
 		std::string keyWord, dayOfTheWeek;
 		fin >> keyWord >> dayOfTheWeek;
 		input.push_back({ keyWord , dayOfTheWeek });
+		if (!std::getline(fin, line))
+		{
+			break;
+		}
 	}
 }
 
