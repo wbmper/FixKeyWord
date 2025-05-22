@@ -41,7 +41,7 @@ enum TYPE_OF_DAY
 std::vector<Node2> weekDayBest[maxWeekDay]; //월 ~ 금
 std::vector<Node2> weekTypeBest[maxDayType]; //평일, 주말
 
-int UZ = UZ_INITIAL;
+int UZ = UZ_INITIAL - 1;
 
 // 레벤슈타인 거리 계산 알고리즘 (문자열 유사도 검사)
 int levenshtein(const std::string& a, const std::string& b) {
@@ -80,7 +80,7 @@ bool similar(const std::string& keyWord1, const std::string& keyWord2) {
 
 int getDayType(int day)
 {
-	if (day < monDay || day >= maxDayType)
+	if (day < monDay || day >= maxWeekDay)
 		return inValidType;
 
 	if (day >= monDay && day <= friDay)
@@ -152,7 +152,35 @@ void registerWeekTypeBest(int dayType, std::string& keyWord)
 	}
 }
 
+bool getPerfectKeywordFromDayBest(int dayOfWeek, const std::string& keyWord, Node2& target)
+{
+	for (Node2& node : weekDayBest[dayOfWeek]) {
+		if (node.name == keyWord) {
+			node.point += (node.point * 0.1);
+			target = node;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool getPerfectKeywordFromDayType(int dayType, const std::string& keyWord, Node2& target)
+{
+	for (Node2& node : weekTypeBest[dayType]) {
+		if (node.name == keyWord) {
+			node.point += (node.point * 0.1);
+			target = node;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 std::string input2(std::string keyWord, std::string dayString) {
+
+	UZ++;
 	int dayOfWeek = getDayOfWeek(dayString);
 	int dayType = getDayType(dayOfWeek);
 	int point = UZ;
@@ -164,27 +192,21 @@ std::string input2(std::string keyWord, std::string dayString) {
 	int max2 = 0;
 
 	int perfectFlag = 0;
-	for (Node2& node : weekDayBest[dayOfWeek]) {
-		if (node.name == keyWord) {
-			max1 = node.point + (node.point * 0.1);
-			node.point += (node.point * 0.1);
-			perfectFlag = 1;
-			break;
-		}
+	Node2 target;
+	if (getPerfectKeywordFromDayBest(dayOfWeek, keyWord, target))
+	{
+		max1 = target.point;
+		perfectFlag = 1;
 	}
 
-	for (Node2& node : weekTypeBest[dayType]) {
-		if (node.name == keyWord) {
-			max2 = node.point + (node.point * 0.1);
-			node.point += (node.point * 0.1);
-			perfectFlag = 1;
-			break;
-		}
+	if (getPerfectKeywordFromDayType(dayType, keyWord, target))
+	{
+		max2 = target.point;
 	}
 
 	//재정렬 작업
 	if (UZ >= ARRAGNE_THRESHOLD || max1 >= ARRAGNE_THRESHOLD || max2 >= ARRAGNE_THRESHOLD) {
-		UZ = UZ_INITIAL;
+		UZ = UZ_INITIAL - 1;
 		initializeDayBestPoint();
 		initializeTypeBestPoint();
 	}
