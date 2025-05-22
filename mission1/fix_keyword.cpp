@@ -72,14 +72,13 @@ int levenshtein(const std::string& a, const std::string& b) {
 }
 
 // 점수 환산
-bool similar(const std::string& a, const std::string& b) {
-	if (a.empty() || b.empty()) return true;
+bool similar(const std::string& keyWord1, const std::string& keyWord2) {
+	if (keyWord1.empty() || keyWord2.empty()) return true;
 
-	int dist = levenshtein(a, b);
-	int max_len = std::max(a.length(), b.length());
+	int dist = levenshtein(keyWord1, keyWord2);
+	int max_len = std::max(keyWord1.length(), keyWord2.length());
 	// 유사도 비율 (1.0: 완전히 같음, 0.0: 전혀 다름)
 	double similarity = 1.0 - (double)dist / max_len;
-
 	int score = 1 + static_cast<int>(similarity * 99);
 
 	if (score >= 80) return true;
