@@ -140,8 +140,8 @@ string input2(string keyWord, string dayString) {
 	//관리 목록에 존재하는지 확인
 	//관리되는 키워드이면 점수가 증가
 
-	long long int max1 = 0;
-	long long int max2 = 0;
+	int max1 = 0;
+	int max2 = 0;
 
 	int perfectFlag = 0;
 	for (Node2& node : weekDayBest[dayOfWeek]) {
