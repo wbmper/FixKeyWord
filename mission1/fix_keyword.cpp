@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#define ARRAGNE_THRESHOLD (2100000000)
+
 struct Node {
 	string w;
 	string wk;
@@ -142,7 +144,7 @@ string input2(string w, string dayString) {
 	}
 
 	//재정렬 작업
-	if (UZ >= 2100000000 || max1 >= 2100000000 || max2 >= 2100000000) {
+	if (UZ >= ARRAGNE_THRESHOLD || max1 >= ARRAGNE_THRESHOLD || max2 >= ARRAGNE_THRESHOLD) {
 		UZ = 9;
 		for (int i = 0; i < maxWeekDay; i++) {
 			int num = 1;
