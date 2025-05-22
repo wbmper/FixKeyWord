@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -43,12 +43,12 @@ enum TYPE_OF_DAY
 	inValidType = 0xFF
 };
 
-std::vector<keyWordManageData> weekDayBest[maxWeekDay]; //¿ù ~ ±İ
-std::vector<keyWordManageData> weekTypeBest[maxDayType]; //ÆòÀÏ, ÁÖ¸»
+std::vector<keyWordManageData> weekDayBest[maxWeekDay]; //ì›” ~ ê¸ˆ
+std::vector<keyWordManageData> weekTypeBest[maxDayType]; //í‰ì¼, ì£¼ë§
 
 int UZ = UZ_INITIAL - 1;
 
-// ·¹º¥½´Å¸ÀÎ °Å¸® °è»ê ¾Ë°í¸®Áò (¹®ÀÚ¿­ À¯»çµµ °Ë»ç)
+// ë ˆë²¤ìŠˆíƒ€ì¸ ê±°ë¦¬ ê³„ì‚° ì•Œê³ ë¦¬ì¦˜ (ë¬¸ìì—´ ìœ ì‚¬ë„ ê²€ì‚¬)
 int levenshtein(const std::string& a, const std::string& b) {
 	const size_t len_a = a.size();
 	const size_t len_b = b.size();
@@ -69,13 +69,13 @@ int levenshtein(const std::string& a, const std::string& b) {
 	return d[len_a][len_b];
 }
 
-// Á¡¼ö È¯»ê
+// ì ìˆ˜ í™˜ì‚°
 bool similar(const std::string& keyWord1, const std::string& keyWord2) {
 	if (keyWord1.empty() || keyWord2.empty()) return true;
 
 	int dist = levenshtein(keyWord1, keyWord2);
 	int max_len = std::max(keyWord1.length(), keyWord2.length());
-	// À¯»çµµ ºñÀ² (1.0: ¿ÏÀüÈ÷ °°À½, 0.0: ÀüÇô ´Ù¸§)
+	// ìœ ì‚¬ë„ ë¹„ìœ¨ (1.0: ì™„ì „íˆ ê°™ìŒ, 0.0: ì „í˜€ ë‹¤ë¦„)
 	double similarity = 1.0 - (double)dist / max_len;
 	int score = 1 + static_cast<int>(similarity * 99);
 
@@ -136,7 +136,7 @@ void registerWeekDayBest(int day, const std::string& keyWord)
 		std::sort(weekDayBest[day].begin(), weekDayBest[day].end());
 	}
 
-	if (weekDayBest[day].back().point < UZ) { // °¡Àå ÀÛÀº keywordÀÇ Á¡¼ö°¡ UZ °ªº¸´Ù ÀÛÀ¸¸é popÇÏ°í push
+	if (weekDayBest[day].back().point < UZ) { // ê°€ì¥ ì‘ì€ keywordì˜ ì ìˆ˜ê°€ UZ ê°’ë³´ë‹¤ ì‘ìœ¼ë©´ popí•˜ê³  push
 		weekDayBest[day].pop_back();
 		weekDayBest[day].push_back({ keyWord, UZ });
 		std::sort(weekDayBest[day].begin(), weekDayBest[day].end());
@@ -218,8 +218,8 @@ std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 	int dayType = getDayType(dayOfWeek);
 	int point = UZ;
 
-	//°ü¸® ¸ñ·Ï¿¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
-	//°ü¸®µÇ´Â Å°¿öµåÀÌ¸é Á¡¼ö°¡ Áõ°¡
+	//ê´€ë¦¬ ëª©ë¡ì— ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
+	//ê´€ë¦¬ë˜ëŠ” í‚¤ì›Œë“œì´ë©´ ì ìˆ˜ê°€ ì¦ê°€
 
 	int max1 = 0;
 	int max2 = 0;
@@ -238,18 +238,18 @@ std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 		perfectFlag = 1;
 	}
 
-	//ÀçÁ¤·Ä ÀÛ¾÷
+	//ì¬ì •ë ¬ ì‘ì—…
 	if (UZ >= ARRAGNE_THRESHOLD || max1 >= ARRAGNE_THRESHOLD || max2 >= ARRAGNE_THRESHOLD) {
 		UZ = UZ_INITIAL - 1;
 		initializeDayBestPoint();
 		initializeTypeBestPoint();
 	}
 
-	if (perfectFlag == 1) { // µ¿ÀÏÇÏ´Ù¸é
+	if (perfectFlag == 1) { // ë™ì¼í•˜ë‹¤ë©´
 		return keyWord;
 	}
 
-	//Âû¶± HIT, À¯»çÇÏ´Ù¸é
+	//ì°°ë–¡ HIT, ìœ ì‚¬í•˜ë‹¤ë©´
 	std::string name = getSimilarKeywordFromDayBest(dayOfWeek, keyWord);
 	if (!name.empty())
 	{
@@ -263,7 +263,7 @@ std::string getRecommededKeyword(std::string keyWord, std::string dayString) {
 	}
 
 
-	//¿Ïº® HIT / Âû¶± HIT µÑ´Ù ¾Æ´Ñ°æ¿ì
+	//ì™„ë²½ HIT / ì°°ë–¡ HIT ë‘˜ë‹¤ ì•„ë‹Œê²½ìš°
 	registerWeekDayBest(dayOfWeek, keyWord);
 	registerWeekTypeBest(dayType, keyWord);
 
@@ -274,8 +274,8 @@ void updateInputData(std::vector<InputData>& input, const std::string& fileName)
 	std::ifstream fin{ fileName };
 
 	if (!fin.is_open()) {
-		std::cerr << "ÆÄÀÏÀ» ¿­ ¼ö ¾ø½À´Ï´Ù." << std::endl;
-		return; // ¿À·ù ¹ß»ı ½Ã ÇÁ·Î±×·¥ Á¾·á
+		std::cerr << "íŒŒì¼ì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤." << std::endl;
+		return; // ì˜¤ë¥˜ ë°œìƒ ì‹œ í”„ë¡œê·¸ë¨ ì¢…ë£Œ
 	}
 
 	input.clear();
