@@ -68,7 +68,7 @@ int levenshtein(const std::string& a, const std::string& b) {
 }
 
 // 점수 환산
-bool similer(const std::string& a, const std::string& b) {
+bool similar(const std::string& a, const std::string& b) {
 	if (a.empty() && b.empty()) return 100;
 	if (a.empty() || b.empty()) return 1;
 
