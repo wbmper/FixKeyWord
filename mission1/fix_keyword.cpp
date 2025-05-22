@@ -4,15 +4,12 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include "gmock/gmock.h"
-
-using namespace std;
 
 #define ARRAGNE_THRESHOLD (2100000000)
 #define UZ_INITIAL (10)
 
 struct Node2 {
-	string name;
+	std::string name;
 	int point;
 
 	bool operator<(const Node2& other) const {
@@ -41,8 +38,8 @@ enum TYPE_OF_DAY
 	inValidType = 0xFF
 };
 
-vector<Node2> weekDayBest[maxWeekDay]; //월 ~ 금
-vector<Node2> weekTypeBest[maxDayType]; //평일, 주말
+std::vector<Node2> weekDayBest[maxWeekDay]; //월 ~ 금
+std::vector<Node2> weekTypeBest[maxDayType]; //평일, 주말
 
 int UZ = UZ_INITIAL;
 
@@ -94,7 +91,7 @@ int getDayType(int day)
 
 int getDayOfWeek(const std::string& dayString)
 {
-	const string dayOfWeek[maxWeekDay] = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
+	const std::string dayOfWeek[maxWeekDay] = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
 
 	for (int day = monDay; day < maxWeekDay; day++)
 	{
@@ -155,7 +152,7 @@ void registerWeekTypeBest(int dayType, std::string& keyWord)
 	}
 }
 
-string input2(string keyWord, string dayString) {
+std::string input2(std::string keyWord, std::string dayString) {
 	int dayOfWeek = getDayOfWeek(dayString);
 	int dayType = getDayType(dayOfWeek);
 	int point = UZ;
@@ -218,17 +215,15 @@ string input2(string keyWord, string dayString) {
 }
 
 void input() {
-	ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
+	std::ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
 	for (int i = 0; i < 500; i++) {
-		string keyWord, dayOfTheWeek;
+		std::string keyWord, dayOfTheWeek;
 		fin >> keyWord >> dayOfTheWeek;
-		string ret = input2(keyWord, dayOfTheWeek);
+		std::string ret = input2(keyWord, dayOfTheWeek);
 		std::cout << ret << "\n";
 	}
 }
 
 int main() {
 	input();
-	testing::InitGoogleMock();
-	return RUN_ALL_TESTS();
 }
