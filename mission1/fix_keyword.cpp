@@ -87,6 +87,9 @@ bool similar(const std::string& a, const std::string& b) {
 
 int getDayType(int day)
 {
+	if (day < monDay || day >= maxDayType)
+		return inValidType;
+
 	if (day >= monDay && day <= friDay)
 		return weekDays;
 
@@ -95,13 +98,15 @@ int getDayType(int day)
 
 int getDayOfWeek(const std::string& wk)
 {
-	if (wk == "monday") return monDay;
-	if (wk == "tuesday") return tuesDay;
-	if (wk == "wednesday") return wednesDay;
-	if (wk == "thursday") return thursDay;
-	if (wk == "friday") return friDay;
-	if (wk == "saturday") return saturDay;
-	if (wk == "sunday") return sunDay;
+	const string dayOfWeek[maxWeekDay] = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
+
+	for (int day = monDay; day < maxWeekDay; day++)
+	{
+		if (dayOfWeek[day] == wk)
+			return day;
+	}
+
+	return inValidDay;
 }
 
 string input2(string w, string dayString) {
