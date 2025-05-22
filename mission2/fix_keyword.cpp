@@ -112,6 +112,7 @@ class DayBestManager : public IKeywordManager {
     if (weekDayBest[index].size() < 10) {
       weekDayBest[index].push_back({keyWord, UZManager::GetInstance().getUZ()});
       std::sort(weekDayBest[index].begin(), weekDayBest[index].end());
+      return;
     }
 
     if (weekDayBest[index].back().point <
@@ -168,6 +169,7 @@ class TypeBestManager : public IKeywordManager {
       weekTypeBest[index].push_back(
           {keyWord, UZManager::GetInstance().getUZ()});
       std::sort(weekTypeBest[index].begin(), weekTypeBest[index].end());
+      return;
     }
 
     if (weekTypeBest[index].back().point < UZManager::GetInstance().getUZ()) {
