@@ -32,6 +32,7 @@ enum DAY_OF_WEEK
 	saturDay,
 	sunDay,
 	maxWeekDay,
+	inValid = 0xFF
 };
 
 enum TYPE_OF_DAY
@@ -39,6 +40,7 @@ enum TYPE_OF_DAY
 	weekDays = 0,
 	weekEnd,
 	maxDayType,
+	inValid = 0xFF
 };
 
 vector<Node2> weekBest[maxWeekDay]; //¿ù ~ ±Ý
@@ -83,9 +85,9 @@ bool similar(const std::string& a, const std::string& b) {
 	return false;
 }
 
-int getDayType(int dayOfWeek)
+int getDayType(int day)
 {
-	if (dayOfWeek >= monDay && dayOfWeek <= friDay)
+	if (day >= monDay && day <= friDay)
 		return weekDays;
 
 	return weekEnd;
