@@ -32,7 +32,7 @@ enum DAY_OF_WEEK
 	saturDay,
 	sunDay,
 	maxWeekDay,
-	inValid = 0xFF
+	inValidDay = 0xFF
 };
 
 enum TYPE_OF_DAY
@@ -40,7 +40,7 @@ enum TYPE_OF_DAY
 	weekDays = 0,
 	weekEnd,
 	maxDayType,
-	inValid = 0xFF
+	inValidType = 0xFF
 };
 
 vector<Node2> weekBest[maxWeekDay]; //¿ù ~ ±Ý

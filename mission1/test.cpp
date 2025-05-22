@@ -10,7 +10,7 @@ TEST(Group, String타입의데이를받으며Day를의미하는숫자로반환)
 	EXPECT_EQ(getDayOfWeek("friday"), weekDays);
 	EXPECT_EQ(getDayOfWeek("saturday"), weekEnd);
 	EXPECT_EQ(getDayOfWeek("sunday"), weekEnd);
-	EXPECT_EQ(getDayOfWeek("adfadf"), inValid); // Invalid
+	EXPECT_EQ(getDayOfWeek("adfadf"), inValidDay); // Invalid
 }
 
 TEST(Group, Day를의미하는숫자를받으면평일또는주말을분류할수있어야한다)
@@ -22,5 +22,5 @@ TEST(Group, Day를의미하는숫자를받으면평일또는주말을분류할수있어야한다)
 	EXPECT_EQ(getDayType(friDay), weekDays);
 	EXPECT_EQ(getDayType(saturDay), weekEnd);
 	EXPECT_EQ(getDayType(sunDay), weekEnd);
-	EXPECT_EQ(getDayType(1000), inValid); // Invalid
+	EXPECT_EQ(getDayType(1000), inValidType); // Invalid
 }
