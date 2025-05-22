@@ -178,6 +178,33 @@ bool getPerfectKeywordFromDayType(int dayType, const std::string& keyWord, Node2
 	return false;
 }
 
+const std::string& getSimilarKeywordFromDayBest(int dayOfWeek, std::string& keyWord)
+{
+	std::string name;
+	name.clear();
+	for (Node2& node : weekDayBest[dayOfWeek]) {
+		if (similar(node.name, keyWord)) {
+			name = node.name;
+			break;
+		}
+	}
+
+	return name;
+}
+
+const std::string& getSimilarKeywordFromTypeBest(int dayType, std::string& keyWord)
+{
+	std::string name;
+	name.clear();
+	for (Node2& node : weekTypeBest[dayType]) {
+		if (similar(node.name, keyWord)) {
+			name = node.name;
+			break;
+		}
+	}
+
+	return name;
+}
 std::string input2(std::string keyWord, std::string dayString) {
 
 	UZ++;
@@ -212,23 +239,24 @@ std::string input2(std::string keyWord, std::string dayString) {
 		initializeTypeBestPoint();
 	}
 
-	if (perfectFlag == 1) {
+	if (perfectFlag == 1) { // µ¿ÀÏÇÏ´Ù¸é
 		return keyWord;
 	}
 
 
-	//Âû¶± HIT
-	for (Node2& node : weekDayBest[dayOfWeek]) {
-		if (similar(node.name, keyWord)) {
-			return node.name;
-		}
+	//Âû¶± HIT, À¯»çÇÏ´Ù¸é
+	std::string name = getSimilarKeywordFromDayBest(dayOfWeek, keyWord);
+	if (!name.empty())
+	{
+		return name;
 	}
 
-	for (Node2& node : weekTypeBest[dayType]) {
-		if (similar(node.name, keyWord)) {
-			return node.name;
-		}
+	name = getSimilarKeywordFromTypeBest(dayType, keyWord);
+	if (!name.empty())
+	{
+		return name;
 	}
+
 
 	//¿Ïº® HIT / Âû¶± HIT µÑ´Ù ¾Æ´Ñ°æ¿ì
 	registerWeekDayBest(dayOfWeek, keyWord);
