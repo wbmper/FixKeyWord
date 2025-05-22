@@ -11,11 +11,6 @@ using namespace std;
 #define ARRAGNE_THRESHOLD (2100000000)
 #define UZ_INITIAL (10)
 
-struct Node {
-	string w;
-	string wk;
-};
-
 struct Node2 {
 	string name;
 	int point;
