@@ -132,6 +132,34 @@ void initializeTypeBestPoint()
 	}
 }
 
+void registerWeekDayBest(int day, const std::string& keyWord)
+{
+	if (weekDayBest[day].size() < 10) {
+		weekDayBest[day].push_back({ keyWord, UZ });
+		std::sort(weekDayBest[day].begin(), weekDayBest[day].end());
+	}
+
+	if (weekDayBest[day].back().point < UZ) { // 가장 작은 keyword의 점수가 UZ 값보다 작으면 pop하고 push
+		weekDayBest[day].pop_back();
+		weekDayBest[day].push_back({ keyWord, UZ });
+		std::sort(weekDayBest[day].begin(), weekDayBest[day].end());
+	}
+}
+
+void registerWeekTypeBest(int day, std::string& keyWord)
+{
+	if (weekTypeBest[day].size() < 10) {
+		weekTypeBest[day].push_back({ keyWord, UZ });
+		std::sort(weekTypeBest[day].begin(), weekTypeBest[day].end());
+	}
+
+	if (weekTypeBest[day].back().point < UZ) {
+		weekTypeBest[day].pop_back();
+		weekTypeBest[day].push_back({ keyWord, UZ });
+		std::sort(weekTypeBest[day].begin(), weekTypeBest[day].end());
+	}
+}
+
 string input2(string keyWord, string dayString) {
 	int dayOfWeek = getDayOfWeek(dayString);
 	int dayType = getDayType(dayOfWeek);
@@ -187,31 +215,8 @@ string input2(string keyWord, string dayString) {
 	}
 
 	//완벽 HIT / 찰떡 HIT 둘다 아닌경우
-	if (weekDayBest[dayOfWeek].size() < 10) {
-		weekDayBest[dayOfWeek].push_back({ keyWord, point });
-		std::sort(weekDayBest[dayOfWeek].begin(), weekDayBest[dayOfWeek].end());
-	}
-
-	if (weekTypeBest[dayOfWeek].size() < 10) {
-		weekTypeBest[dayOfWeek].push_back({ keyWord, point });
-		std::sort(weekTypeBest[dayOfWeek].begin(), weekTypeBest[dayOfWeek].end());
-	}
-
-	if (weekDayBest[dayOfWeek].size() == 10) {
-		if (weekDayBest[dayOfWeek].back().point < point) {
-			weekDayBest[dayOfWeek].pop_back();
-			weekDayBest[dayOfWeek].push_back({ keyWord, point });
-			std::sort(weekDayBest[dayOfWeek].begin(), weekDayBest[dayOfWeek].end());
-		}
-	}
-
-	if (weekTypeBest[dayOfWeek].size() == 10) {
-		if (weekTypeBest[dayOfWeek].back().point < point) {
-			weekTypeBest[dayOfWeek].pop_back();
-			weekTypeBest[dayOfWeek].push_back({ keyWord, point });
-			std::sort(weekTypeBest[dayOfWeek].begin(), weekTypeBest[dayOfWeek].end());
-		}
-	}
+	registerWeekDayBest(dayOfWeek, keyWord);
+	registerWeekTypeBest(dayOfWeek, keyWord);
 
 	return keyWord;
 }
