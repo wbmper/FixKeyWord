@@ -53,14 +53,19 @@ class InputOutputManager
 {
 public:
 	bool openData(const std::string& fileName) {
-		std::ifstream fin{ fileName };
+		fin.open(fileName);
 
-		if (!fin.is_open()) {
+		if (fin.fail()) {
 			std::cerr << "파일을 열 수 없습니다." << std::endl;
 			return false;
 		}
 
 		return true;
+	}
+
+	void closeData()
+	{
+		fin.close();
 	}
 	void updateInputData() {
 	}
@@ -68,6 +73,7 @@ public:
 	}
 private:
 	std::vector<InputData> input;
+	std::ifstream fin;
 };
 
 class IKeywordManager
